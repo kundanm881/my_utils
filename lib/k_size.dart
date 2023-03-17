@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-extension Number on num{
-  Widget get h => SizedBox(height: double.parse("$this"));
-  Widget get w => SizedBox(width: double.parse("$this"));
+// import 'package:my_utils/my_utils.dart';
 
+extension Number on num {
+  ///  [num] is the value type [this] take value of [num]  1.
+  Widget get height => SizedBox(height: double.parse("$this"));
+  Widget get width => SizedBox(width: double.parse("$this"));
 }
-
