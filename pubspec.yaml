@@ -1,7 +1,7 @@
 name: my_utils
 description: A new Flutter package project.
 version: 0.0.1
-homepage:
+homepage: https://github.com/kundanm881/my_utils
 
 environment:
   sdk: ">=2.18.6 <3.0.0"
