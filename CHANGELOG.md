@@ -1,3 +1,3 @@
-## 0.0.2
+## 0.0.3
 
-In this initial release you will get size box utils.
+bug fix.
