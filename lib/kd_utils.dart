@@ -1,3 +1,4 @@
 library kd_utils;
 
-export 'size.dart';
+export 'extensions/size.dart';
+export 'extensions/context_extension.dart';
