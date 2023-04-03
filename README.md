@@ -15,4 +15,5 @@ use .height, .width insted sizebox
 
 ```dart
 200.height,
+10.width,
 ```
