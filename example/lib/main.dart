@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kd_utils/extensions/size.dart';
+import 'package:kd_utils/kd_utils.dart';
 
 void main() {
   runApp(const MyApp());
