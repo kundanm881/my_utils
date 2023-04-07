@@ -1,6 +1,7 @@
-import 'package:kd_utils/api_service/app_api_service.dart';
+import 'package:kd_utils/kd_utils.dart';
 
 class MyApi extends  AppApiService{
+  ApiState apiState = ApiState.loading;
   @override
   Future get(String url) {
     // TODO: implement get
