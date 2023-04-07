@@ -1,25 +1,3 @@
-
-# Kd Utils package
-
-A package to make smooth and fast devlepment
-
-## Getting Started
-
-import package
-
-```dart
-import 'package:kd_utils/kd_utils.dart';
-```
-
-use .height, .width insted sizebox
-
-```dart
-200.height,
-10.width,
-```
-
-## use base api abstract class
-```dart
 import 'package:kd_utils/api_service/app_api_service.dart';
 
 class MyApi extends  AppApiService{
@@ -35,4 +13,3 @@ class MyApi extends  AppApiService{
     throw UnimplementedError();
   }
 }
-```
