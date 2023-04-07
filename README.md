@@ -18,7 +18,7 @@ use .height, .width insted sizebox
 10.width,
 ```
 
-## use base api abstract class
+## Use base api abstract class
 ```dart
 import 'package:kd_utils/api_service/app_api_service.dart';
 
