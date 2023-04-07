@@ -52,6 +52,7 @@ class _MyHomePageState extends State<MyHomePage> {
               'You have pushed the button this many times:',
             ),
             200.height,
+
             10.width,
             Text(
               '$_counter',
