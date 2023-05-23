@@ -1,27 +1,39 @@
-
 # Kd Utils package
 
 A package to make smooth and fast devlepment
 
-## Getting Started
-
-import package
+## Get Started
 
 ```dart
 import 'package:kd_utils/kd_utils.dart';
 ```
 
-use .height, .width insted sizebox
+### Dot Line painter
+
+```dart
+CustomPaint(
+ painter: DotLinePainter(
+  dotheight: 4,
+  space: 16,
+  strokeWdith: 5,
+  strokeCap: StrokeCap.round,
+  axis: Axis.vertical,
+ ),
+),
+```
+
+#### User of extension
+
+Sizebox Extension
 
 ```dart
 200.height,
 10.width,
 ```
 
-## Use base api abstract class
-```dart
-import 'package:kd_utils/api_service/app_api_service.dart';
+#### Base api class
 
+```dart
 class MyApi extends  AppApiService{
   @override
   Future get(String url) {
