@@ -86,10 +86,10 @@ packages:
   kd_utils:
     dependency: "direct main"
     description:
-      path: "D:\\Kundan\\Android Apps\\my_package\\my_utils"
+      path: "D:/Kundan/Android Apps/my_package/my_utils"
       relative: false
     source: path
-    version: "0.0.5+4"
+    version: "0.0.5+5"
   lints:
     dependency: transitive
     description:
@@ -193,4 +193,4 @@ packages:
     version: "2.1.4"
 sdks:
   dart: ">=3.0.2 <4.0.0"
-  flutter: ">=1.17.0"
+  flutter: ">=3.10.2"

@@ -1,5 +1,6 @@
-# 0.0.5+4
+# 0.0.6
 
+add new extensions methods
 add new dot line painter
 
 in this update add api abstract class
