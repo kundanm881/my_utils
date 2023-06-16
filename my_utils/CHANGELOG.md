@@ -1,4 +1,4 @@
-# 0.0.6+1
+# 0.0.7
 
 add new extensions methods
 add new dot line painter
