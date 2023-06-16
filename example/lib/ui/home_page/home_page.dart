@@ -30,6 +30,20 @@ class _HomePageViewState extends HomePageSate {
           ListView(
             padding: EdgeInsets.symmetric(horizontal: 43),
             children: [
+              CustomPaint(
+                foregroundPainter: DotLinePainter(
+                  dotheight: 4,
+                  space: 16,
+                  strokeWdith: 5,
+                  strokeCap: StrokeCap.round,
+                  axis: Axis.horizontal,
+                ),
+                child: Container(
+                  height: 100,
+                  width: 200,
+                  color: Colors.green,
+                ),
+              ),
               143.height,
               TweenAnimationBuilder(
                 tween: Tween(begin: 1.0, end: 0.0),
@@ -52,7 +66,7 @@ class _HomePageViewState extends HomePageSate {
                     builder:
                         (BuildContext context, double value, Widget? child) {
                       return Transform.translate(
-                        offset: Offset(0, -value1*100),
+                        offset: Offset(0, -value1 * 100),
                         child: Opacity(opacity: value, child: child!),
                       );
                     },
@@ -125,3 +139,4 @@ class _HomePageViewState extends HomePageSate {
     // );
   }
 }
+

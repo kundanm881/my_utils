@@ -24,12 +24,42 @@ class DotLinePainter extends CustomPainter {
       ..strokeWidth = strokeWdith
       ..strokeCap = strokeCap;
 
+    _dowDotLine(axis: axis, canvas: canvas, paint: paint, size: size);
+    // if (axis == Axis.horizontal) {
+    //   for (; startPoint <= boxWidth; (startPoint += space)) {
+    //     double sp = startPoint.toDouble();
+    //     double enp = (startPoint += dotheight).toDouble();
+    //     canvas.drawLine(
+    //       Offset(sp, 0),
+    //       Offset(enp, 0),
+    //       paint,
+    //     );
+    //   }
+    // } else {
+    //   for (; startPoint <= boxHeight; (startPoint += space)) {
+    //     double sp = startPoint.toDouble();
+    //     double enp = (startPoint += dotheight).toDouble();
+    //     canvas.drawLine(
+    //       Offset(0, sp),
+    //       Offset(0, enp),
+    //       paint,
+    //     );
+    //   }
+    // }
+  }
+
+  _dowDotLine({
+    required Axis axis,
+    required Canvas canvas,
+    required Paint paint,
+    required Size size,
+  }) {
     final double boxHeight = size.height;
     final double boxWidth = size.width;
     int startPoint = 0;
 
     if (axis == Axis.horizontal) {
-      for (startPoint; startPoint <= boxWidth; (startPoint += space)) {
+      for (; startPoint <= boxWidth; (startPoint += space)) {
         double sp = startPoint.toDouble();
         double enp = (startPoint += dotheight).toDouble();
         canvas.drawLine(
@@ -39,7 +69,7 @@ class DotLinePainter extends CustomPainter {
         );
       }
     } else {
-      for (startPoint; startPoint <= boxHeight; (startPoint += space)) {
+      for (; startPoint <= boxHeight; (startPoint += space)) {
         double sp = startPoint.toDouble();
         double enp = (startPoint += dotheight).toDouble();
         canvas.drawLine(
