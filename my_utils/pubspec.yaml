@@ -1,6 +1,6 @@
 name: kd_utils
 description: this package is for utils
-version: 0.0.6
+version: 0.0.6+1
 homepage: https://github.com/kundanm881/my_utils/tree/master/my_utils
 
 environment:
