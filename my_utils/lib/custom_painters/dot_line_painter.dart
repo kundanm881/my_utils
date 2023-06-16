@@ -59,7 +59,7 @@ class DotLinePainter extends CustomPainter {
     int startPoint = 0;
 
     if (axis == Axis.horizontal) {
-      for (; startPoint <= boxWidth; (startPoint += space)) {
+      for (; startPoint <= boxWidth; startPoint += space) {
         double sp = startPoint.toDouble();
         double enp = (startPoint += dotheight).toDouble();
         canvas.drawLine(
@@ -69,7 +69,7 @@ class DotLinePainter extends CustomPainter {
         );
       }
     } else {
-      for (; startPoint <= boxHeight; (startPoint += space)) {
+      for (; startPoint <= boxHeight; startPoint += space) {
         double sp = startPoint.toDouble();
         double enp = (startPoint += dotheight).toDouble();
         canvas.drawLine(
