@@ -1,7 +1,10 @@
 name: kd_utils
-description: this package is for utils
-version: 0.0.7+2
+
+description: This package is for utils and custom widgets so any one can use and make there app as hi/she like
 homepage: https://github.com/kundanm881/my_utils/tree/master/my_utils
+
+# my package version code
+version: 0.0.7+3
 
 environment:
   sdk: ">=3.0.2 <4.0.0"
@@ -10,6 +13,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+
+  # dependencies add here
+  intl: ^0.18.1
 
 dev_dependencies:
   flutter_test:

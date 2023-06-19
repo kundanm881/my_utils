@@ -2,6 +2,9 @@ library kd_utils;
 
 export 'extensions/extensions.dart';
 
+// widgets
+export 'widgets/date_picker.dart';
+
 // api services
 export 'api_service/api_service_lib.dart';
 

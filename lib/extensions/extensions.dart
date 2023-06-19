@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 
 extension ContextExtension on BuildContext {
@@ -13,6 +13,8 @@ extension ContextExtension on BuildContext {
   double get screenWidth => screenSize.width;
 
   double get screenHeight => screenSize.height;
+
+  ThemeData get theme => Theme.of(this);
 }
 
 extension WidgetExtension on num {

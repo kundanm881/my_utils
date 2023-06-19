@@ -1,5 +1,5 @@
+import 'package:example/ui/date_picker/date_picker_exmp.dart';
 import 'package:flutter/material.dart';
-import 'ui/home_page/home_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: HomePageView(),
+      home: DatePickerDemo(),
     );
   }
 }
