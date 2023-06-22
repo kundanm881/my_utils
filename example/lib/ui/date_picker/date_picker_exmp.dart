@@ -21,7 +21,8 @@ class DatePickerDemo extends StatelessWidget {
               startDate: DateTime.now().subtract(Duration(days: 50)),
               endDate: DateTime.now().add(Duration(days: 50)),
               weekday: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-              decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
+              decoration:
+                  BoxDecoration(borderRadius: BorderRadius.circular(10)),
               onDateClick: (selectedDate) {
                 print(selectedDate);
               },
