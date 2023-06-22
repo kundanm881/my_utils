@@ -1,8 +1,11 @@
-# 0.0.7+3
+# [0.1.0] - [2023-06-23]
+* In this update we add date picker Widget
+* Extra Extension methods.
 
-in last 3 updates we try to resolve the package issues
-add new extensions methods
-add new dot line painter
 
-in this update add api abstract class
-add api state enum
+## Past updates
+* in last 3 updates we try to resolve the package issues
+* add new extensions methods
+* add new dot line painter
+* in this update add api abstract class
+* add api state enum

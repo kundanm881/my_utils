@@ -33,7 +33,6 @@ abstract class DatePickerState extends State<DatePickerView> {
     for (int i = 0; i < getDays; i++) {
       dates.add(startDate.add(Duration(days: i)));
     }
-    print(dates);
   }
 
   int get getDays => endDate.difference(startDate).inDays;
@@ -42,8 +41,8 @@ abstract class DatePickerState extends State<DatePickerView> {
   void initState() {
     _verInit();
     _setListDates();
-    // int _currentDateIndex;
-    print(dates.indexOf(currentDate));
+  
+    // print(dates.indexOf(currentDate));
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       dateScrollController.animateTo(
