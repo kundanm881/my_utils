@@ -1,8 +1,10 @@
-# Kd Utils package
+# My Utils
 
-A package to make smooth and fast devlepment
+A My_Utils is make to help developers to fast and smooth coding experience with helping widget and method in flutter
 
-## Get Started
+
+
+# Get Started
 
 ```dart
 import 'package:kd_utils/kd_utils.dart';
