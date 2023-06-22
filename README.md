@@ -43,14 +43,14 @@ CustomPaint(
 
 # Extension methos
 
-Sizebox Extension
+Widgets Extension 
 
 ```dart
 200.height,
 
 10.width,
 ```
-Extension Context
+Context Extension
 
 ```dart
 ThemeData themeData = context.theme;
