@@ -1,3 +1,7 @@
+# [0.1.0+2] - [2023-06-23]
+* bug fix
+
+
 # [0.1.0] - [2023-06-23]
 * In this update we add date picker Widget
 * Extra Extension methods.

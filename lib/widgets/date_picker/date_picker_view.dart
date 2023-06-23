@@ -77,9 +77,9 @@ class _DatePickerViewState extends DatePickerState {
                   decoration: widget.decoration.copyWith(
                     color: (currentDate == dates[index])
                         ? widget.activeColor ??
-                            context.theme.colorScheme.primary
+                            context.appTheme.colorScheme.primary
                         : widget.color ??
-                            context.theme.colorScheme.onSecondaryContainer,
+                            context.appTheme.colorScheme.onSecondaryContainer,
                     // borderRadius: BorderRadius.circular(10),
                   ),
                   alignment: Alignment.center,

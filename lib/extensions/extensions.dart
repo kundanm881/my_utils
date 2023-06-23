@@ -14,7 +14,7 @@ extension ContextExtension on BuildContext {
 
   double get screenHeight => screenSize.height;
 
-  ThemeData get theme => Theme.of(this);
+  ThemeData get appTheme => Theme.of(this);
 }
 
 extension WidgetExtension on num {
