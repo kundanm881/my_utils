@@ -12,7 +12,7 @@ import 'package:kd_utils/kd_utils.dart';
 
 <h1>Date Picker </h1>
 
-<img src="assets\demo_date_time.png" width=300/>
+<img src="https://github.com/kundanm881/my_utils/blob/master/assets/demo_date_time.png?raw=true" width=300/>
 
 ### Usage.
 
