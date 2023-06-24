@@ -25,27 +25,7 @@ class DotLinePainter extends CustomPainter {
       ..strokeCap = strokeCap;
 
     _dowDotLine(axis: axis, canvas: canvas, paint: paint, size: size);
-    // if (axis == Axis.horizontal) {
-    //   for (; startPoint <= boxWidth; (startPoint += space)) {
-    //     double sp = startPoint.toDouble();
-    //     double enp = (startPoint += dotheight).toDouble();
-    //     canvas.drawLine(
-    //       Offset(sp, 0),
-    //       Offset(enp, 0),
-    //       paint,
-    //     );
-    //   }
-    // } else {
-    //   for (; startPoint <= boxHeight; (startPoint += space)) {
-    //     double sp = startPoint.toDouble();
-    //     double enp = (startPoint += dotheight).toDouble();
-    //     canvas.drawLine(
-    //       Offset(0, sp),
-    //       Offset(0, enp),
-    //       paint,
-    //     );
-    //   }
-    // }
+   
   }
 
   _dowDotLine({

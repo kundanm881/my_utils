@@ -4,15 +4,36 @@ import 'package:kd_utils/extensions/extensions.dart';
 import 'package:kd_utils/widgets/date_picker/date_picker_state.dart';
 
 class DatePickerView extends StatefulWidget {
+  /// [currentDate] is user to show current index of date picker
   final DateTime currentDate;
+
+  /// [startDate] is first date to start [arrey]
   final DateTime startDate;
+
+  /// [endDate] is the last date of date picker
   final DateTime endDate;
+
+  /// [yearMonth], [day], [weekday] is [textStyle]
   final TextStyle? yearMonth, day, weekday;
+
+  /// [dateSpacing] is user to add space bitwen dates
   final double dateSpacing;
+
+  /// [onDateClick] return clicked date
   final Function(DateTime selectedDate) onDateClick;
-  final Color? color, dayColor, weekdayColor;
-  final Color? activeColor, activeDay, activeWeekday;
+
+  /// [color] user used to apply colors
+  final Color? color,
+      dayColor,
+      weekdayColor,
+      activeColor,
+      activeDay,
+      activeWeekday;
+
+  /// [dayWeekHeight] is used to add space bitween [day] and [weekday]
   final double dayWeekHeight;
+
+  /// [decoration] is user to decorate container
   final BoxDecoration decoration;
 
   const DatePickerView({
@@ -49,10 +70,17 @@ class _DatePickerViewState extends DatePickerState {
         AnimatedBuilder(
           animation: dateScrollController,
           builder: (context, child) {
-            DateTime scrollerDate = widget.startDate.add(Duration(
-                days: (dateScrollController.hasClients)
-                    ? (dateScrollController.offset / 90).round()
-                    : 0));
+            /// method is for chacking [dateScrollController] has client or not
+            /// if the [dateScrollController] has client then devide [offset] / widgets with
+            ///
+            DateTime scrollerDate = widget.startDate.add(
+              Duration(
+                  days: (dateScrollController.hasClients)
+                      ? (dateScrollController.offset /
+                              ((widget.dateSpacing+boxSize)))
+                          .round()
+                      : 0),
+            );
             return Text("${DateFormat("yyy - MMM").format(scrollerDate)}",
                 style: widget.yearMonth ?? monthTextStyle);
           },

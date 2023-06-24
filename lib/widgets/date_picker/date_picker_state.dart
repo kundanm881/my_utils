@@ -41,12 +41,18 @@ abstract class DatePickerState extends State<DatePickerView> {
   void initState() {
     _verInit();
     _setListDates();
-  
+
     // print(dates.indexOf(currentDate));
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      double startScreen = 0;
+      // double centerScreen =
+      //     ((context.screenWidth / 2) - (widget.dateSpacing + boxSize) / 2);
+      // double endScreen =
+      //     ((context.screenWidth) - ((widget.dateSpacing * 2) + boxSize));
+
       dateScrollController.animateTo(
-          (dates.indexOf(currentDate) * (boxSize + widget.dateSpacing)),
+          (dates.indexOf(currentDate) * (widget.dateSpacing + boxSize)-startScreen),
           duration: Duration(milliseconds: 300),
           curve: Curves.easeIn);
     });
