@@ -9,7 +9,6 @@ DateTime getDateTimeFromTimeStamp({dynamic timeStamp}){
     tempEpoch =  (intTime* 1000000);
     break;
     case 13:
-      final int time = int.parse(stringTime);
       tempEpoch =  (intTime* 1000);
     break;
     default:
