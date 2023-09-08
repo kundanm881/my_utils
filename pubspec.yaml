@@ -4,7 +4,7 @@ description: This package is for utils and custom widgets so any one can use and
 homepage: https://github.com/kundanm881/my_utils
 
 # my package version code
-version: 0.1.0+4
+version: 0.1.0+2
 
 environment:
   sdk: ">=3.0.2 <4.0.0"

@@ -10,6 +10,16 @@ A My_Utils is make to help developers to fast and smooth coding experience with 
 import 'package:kd_utils/kd_utils.dart';
 ```
 
+<h1>TimeStamp</h1>
+
+### Usage.
+
+```dart
+  final DateTime date = getDateTimeFromTimeStamp(timeStamp: "1694160861");
+  print(date); // 2023-09-08 13:44:21.000
+```
+
+
 <h1>Date Picker </h1>
 
 <img src="https://github.com/kundanm881/my_utils/blob/master/assets/demo_date_time.png?raw=true" width=300/>
