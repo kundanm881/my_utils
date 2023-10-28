@@ -1,8 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:kd_utils/kd_utils.dart';
+import 'package:kd_utils/methods/timestemp.dart';
 
-class DatePickerDemo extends StatelessWidget {
+class DatePickerDemo extends StatefulWidget {
   const DatePickerDemo({super.key});
+
+  @override
+  State<DatePickerDemo> createState() => _DatePickerDemoState();
+}
+
+
+
+class _DatePickerDemoState extends State<DatePickerDemo> {
+  int? kDate;
 
   @override
   Widget build(BuildContext context) {
@@ -25,8 +35,18 @@ class DatePickerDemo extends StatelessWidget {
                   BoxDecoration(borderRadius: BorderRadius.circular(10)),
               onDateClick: (selectedDate) {
                 print(selectedDate);
+
+                setState(() {
+                  int poch = (selectedDate.microsecondsSinceEpoch);
+                  kDate = (poch / 1000000).round();
+                });
               },
             ),
+            20.height,
+            if (kDate != null)
+              Text(getDateTimeFromTimeStamp(timeStamp: kDate!).toString())
+            else
+              Text("No Data $kDate"),
           ],
         ),
       ),

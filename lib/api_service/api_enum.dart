@@ -1,2 +1,6 @@
-/// this [ApiState] is user to show api state
-enum ApiState {loading, success, error}
+// this enum class is user to show api call states
+enum ApiState {
+  loading,
+  success,
+  error,
+}

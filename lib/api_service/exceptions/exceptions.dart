@@ -1,8 +1,8 @@
-abstract class KExcaption {
+abstract class KException {
   final int errorCode;
   final String errorMessage;
 
-  KExcaption({required this.errorCode, required this.errorMessage});
+  KException({required this.errorCode, required this.errorMessage});
 
   @override
   String toString() {
@@ -10,6 +10,6 @@ abstract class KExcaption {
   }
 }
 
-class Exception extends KExcaption {
-  Exception({required super.errorCode, required super.errorMessage});
+class TextException extends KException {
+  TextException({required super.errorCode, required super.errorMessage});
 }

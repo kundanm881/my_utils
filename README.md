@@ -17,6 +17,9 @@ import 'package:kd_utils/kd_utils.dart';
 ```dart
   final DateTime date = getDateTimeFromTimeStamp(timeStamp: "1694160861");
   print(date); // 2023-09-08 13:44:21.000
+
+  final weekDay = getWeekDay(1, short: true);
+  print(weekDay); // Mon
 ```
 
 
