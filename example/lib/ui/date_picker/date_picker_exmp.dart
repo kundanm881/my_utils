@@ -1,6 +1,9 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:kd_utils/kd_utils.dart';
 import 'package:kd_utils/methods/timestemp.dart';
+import 'package:kd_utils/widgets/otp_widget/otp_view.dart';
 
 class DatePickerDemo extends StatefulWidget {
   const DatePickerDemo({super.key});
@@ -8,8 +11,6 @@ class DatePickerDemo extends StatefulWidget {
   @override
   State<DatePickerDemo> createState() => _DatePickerDemoState();
 }
-
-
 
 class _DatePickerDemoState extends State<DatePickerDemo> {
   int? kDate;
@@ -47,6 +48,14 @@ class _DatePickerDemoState extends State<DatePickerDemo> {
               Text(getDateTimeFromTimeStamp(timeStamp: kDate!).toString())
             else
               Text("No Data $kDate"),
+            20.height,
+            OTPView(
+              otpCount: 6,
+              onSubmit: (otp) {
+                log(otp.toString());
+              },
+              controller: TextEditingController(),
+            )
           ],
         ),
       ),
