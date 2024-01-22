@@ -1,5 +1,6 @@
 @deprecated
 abstract class AppApiService {
+  //delet this
   Future get(String url);
   Future post(String url, {required Map<String, dynamic> body});
 
