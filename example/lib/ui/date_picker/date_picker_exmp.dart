@@ -2,9 +2,6 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:kd_utils/kd_utils.dart';
-import 'package:kd_utils/methods/timestemp.dart';
-import 'package:kd_utils/widgets/otp_widget/otp_view.dart';
-import 'package:kd_utils/widgets/otp_widget/otp_view_v2.dart';
 
 class DatePickerDemo extends StatefulWidget {
   const DatePickerDemo({super.key});
@@ -15,6 +12,7 @@ class DatePickerDemo extends StatefulWidget {
 
 class _DatePickerDemoState extends State<DatePickerDemo> {
   int? kDate;
+  FocusNode focusNode = FocusNode();
 
   @override
   Widget build(BuildContext context) {
@@ -50,9 +48,21 @@ class _DatePickerDemoState extends State<DatePickerDemo> {
             else
               Text("No Data $kDate"),
             20.height,
-            OTPViewV2(controller: OTPViewController(text: "123")),
             OTPView(
-              otpCount: 6,
+              otpCount: 5,
+              style: OTPStyle(
+                  cursorColor: Colors.green,
+                  maxHeight: 60,
+                  inputBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: BorderSide(
+                      color: Colors.green,
+                      width: 3,
+                    ),
+                  ),
+                  isDense: true,
+                  // maxWidth: 10,
+                  space: 20),
               onSubmit: (otp) {
                 log(otp.toString());
               },

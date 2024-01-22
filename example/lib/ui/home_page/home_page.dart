@@ -105,38 +105,5 @@ class _HomePageViewState extends HomePageSate {
         ],
       ),
     );
-    // return Scaffold(
-
-    //   appBar: AppBar(
-    //     title: Text("HomePage"),
-    //   ),
-    //   body: Column(
-    //     children: [
-    //       Text("${context.viewPadding} + ${context.screenSize}"),
-    //       20.height,
-    //       Text("$newStyle + ${context.screenWidth}"),
-    //       // Text("${10.n} "),
-    //       30.height,
-    //       Center(
-    //         child: CustomPaint(
-    //             child: Container(
-    //               height: 100,
-    //               width: 100,
-    //               // color: Colors.grey.shade300,
-    //             ),
-    //             // foregroundPainter: DotBorder()
-    //             painter: DotLinePainter(
-    //               dotheight: 4,
-    //               space: 16,
-    //               strokeWdith: 5,
-    //               strokeCap: StrokeCap.round,
-    //               axis: Axis.vertical,
-    //             ),
-    //             ),
-    //       ),
-    //     ],
-    //   ),
-    // );
   }
 }
-
