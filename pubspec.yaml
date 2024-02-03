@@ -4,10 +4,10 @@ description: This package is for utils and custom widgets so any one can use and
 homepage: https://github.com/kundanm881/my_utils
 
 # my package version code
-version: 0.1.3
+version: 0.1.4
 
 environment:
-  sdk: ">=3.1.3 <4.0.0"
+  sdk: ">=3.2.3 <4.0.0"
   flutter: ">=3.10.2"
 
 dependencies:
