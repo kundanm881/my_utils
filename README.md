@@ -67,6 +67,7 @@ OTPView(
 )
 ```
 
+<!--
 # Dot Line painter
 
 ```dart
@@ -79,7 +80,7 @@ CustomPaint(
   axis: Axis.vertical,
  ),
 ),
-```
+``` -->
 
 # Extension methos
 
@@ -105,6 +106,7 @@ double screenWidth = context.screenWidth;
 double screenHeight = context.screenHeight;
 ```
 
+<!--
 # Base Api class
 
 ```dart
@@ -121,4 +123,4 @@ class MyApi extends  AppApiService{
     throw UnimplementedError();
   }
 }
-```
+``` -->
