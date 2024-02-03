@@ -32,9 +32,9 @@ class _HomePageViewState extends HomePageSate {
             children: [
               CustomPaint(
                 foregroundPainter: DotLinePainter(
-                  dotheight: 4,
+                  dotHeight: 4,
                   space: 16,
-                  strokeWdith: 5,
+                  strokeWidth: 5,
                   strokeCap: StrokeCap.round,
                   axis: Axis.horizontal,
                 ),

@@ -52,7 +52,8 @@ abstract class DatePickerState extends State<DatePickerView> {
       //     ((context.screenWidth) - ((widget.dateSpacing * 2) + boxSize));
 
       dateScrollController.animateTo(
-          (dates.indexOf(currentDate) * (widget.dateSpacing + boxSize)-startScreen),
+          (dates.indexOf(currentDate) * (widget.dateSpacing + boxSize) -
+              startScreen),
           duration: Duration(milliseconds: 300),
           curve: Curves.easeIn);
     });
