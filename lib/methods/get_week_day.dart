@@ -1,7 +1,7 @@
 String getWeekDay(int day, {bool short = false}) {
   String din = "";
 
-  // chack week data
+  // Check week as per int day value
   switch (day) {
     case DateTime.monday:
       din = "Monday";
