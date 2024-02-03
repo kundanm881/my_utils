@@ -1,3 +1,8 @@
+DateTime timeStampToDateTime(dynamic timeStamp) {
+  return getDateTimeFromTimeStamp(timeStamp: timeStamp);
+}
+
+@Deprecated('use TimeStampToDateTime')
 DateTime getDateTimeFromTimeStamp({dynamic timeStamp}) {
   // convert timeStamp to string
   final String stringTime = timeStamp.toString();
@@ -19,7 +24,7 @@ DateTime getDateTimeFromTimeStamp({dynamic timeStamp}) {
       break;
   }
 
-  // convert int date time to DateTime
+  //* convert int date time to DateTime
   final finalTime = DateTime.fromMicrosecondsSinceEpoch(tempEpoch);
 
   return finalTime;

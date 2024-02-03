@@ -44,7 +44,7 @@ class _DatePickerDemoState extends State<DatePickerDemo> {
             ),
             20.height,
             if (kDate != null)
-              Text(getDateTimeFromTimeStamp(timeStamp: kDate!).toString())
+              Text(timeStampToDateTime(kDate!).toString())
             else
               Text("No Data $kDate"),
             20.height,

@@ -30,7 +30,7 @@ class DatePickerView extends StatefulWidget {
       activeDay,
       activeWeekday;
 
-  /// [dayWeekHeight] is used to add space bitween [day] and [weekday]
+  /// [dayWeekHeight] is used to add space between [day] and [weekday]
   final double dayWeekHeight;
 
   /// [decoration] is user to decorate container
@@ -70,14 +70,14 @@ class _DatePickerViewState extends DatePickerState {
         AnimatedBuilder(
           animation: dateScrollController,
           builder: (context, child) {
-            /// method is for chacking [dateScrollController] has client or not
+            /// method is for checking [dateScrollController] has client or not
             /// if the [dateScrollController] has client then devide [offset] / widgets with
             ///
             DateTime scrollerDate = widget.startDate.add(
               Duration(
                   days: (dateScrollController.hasClients)
                       ? (dateScrollController.offset /
-                              ((widget.dateSpacing+boxSize)))
+                              ((widget.dateSpacing + boxSize)))
                           .round()
                       : 0),
             );
@@ -107,7 +107,7 @@ class _DatePickerViewState extends DatePickerState {
                         ? widget.activeColor ??
                             context.appTheme.colorScheme.primary
                         : widget.color ??
-                            context.appTheme.colorScheme.onSecondaryContainer,
+                            context.appTheme.colorScheme.onPrimary,
                     // borderRadius: BorderRadius.circular(10),
                   ),
                   alignment: Alignment.center,
