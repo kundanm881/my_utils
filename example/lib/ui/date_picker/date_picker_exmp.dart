@@ -34,8 +34,7 @@ class _DatePickerDemoState extends State<DatePickerDemo> {
               decoration:
                   BoxDecoration(borderRadius: BorderRadius.circular(10)),
               onDateClick: (selectedDate) {
-                print(selectedDate);
-
+                // print(selectedDate);
                 setState(() {
                   int poch = (selectedDate.microsecondsSinceEpoch);
                   kDate = (poch / 1000000).round();
@@ -67,6 +66,13 @@ class _DatePickerDemoState extends State<DatePickerDemo> {
                 log(otp.toString());
               },
               controller: TextEditingController(),
+            ),
+            20.height,
+            ElevatedButton(
+              onPressed: () {
+                kSnackBar(context, message: "das das");
+              },
+              child: Text("snack"),
             )
           ],
         ),

@@ -5,6 +5,7 @@ export 'extensions/extensions.dart';
 // * functions
 export 'methods/time_stamp.dart';
 export 'methods/get_week_day.dart';
+export 'methods/show_snack_bar.dart';
 
 // * widgets
 export 'widgets/date_picker/date_picker_view.dart';
