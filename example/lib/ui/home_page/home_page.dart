@@ -93,8 +93,8 @@ class _HomePageViewState extends HomePageSate {
                     stops: [0.1, 0.9],
                     tileMode: TileMode.clamp,
                     colors: [
-                      Colors.white.withOpacity(0.4),
-                      Colors.white.withOpacity(0.2),
+                      Colors.white.withValues(alpha: 0.4),
+                      Colors.white.withValues(alpha: 0.2),
                     ],
                   ),
                   borderRadius: BorderRadius.circular(8),
