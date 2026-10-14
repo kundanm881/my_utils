@@ -6,6 +6,7 @@ export 'extensions/extensions.dart';
 export 'methods/time_stamp.dart';
 export 'methods/get_week_day.dart';
 export 'methods/show_snack_bar.dart';
+export 'methods/date_formatter.dart';
 
 // * widgets
 export 'widgets/date_picker/date_picker_view.dart';
@@ -19,3 +20,6 @@ export 'custom_painters/dot_line_painter.dart';
 
 // * formatters
 export 'formatters/currency_input_formatter.dart';
+
+// * platform
+export 'platform/platform_helper.dart';

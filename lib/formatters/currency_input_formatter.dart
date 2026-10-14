@@ -282,4 +282,68 @@ class CurrencyInputFormatter extends TextInputFormatter {
       return '';
     }
   }
+
+  /// Formats currency with optional compact suffix (Lakh / Crore) and symbol (defaults to '₹')
+  /// e.g. 50000 -> "₹ 50,000", 150000 -> "₹ 1.50 L", 10000000 -> "₹ 1.00 Cr"
+  static String formatCurrency(
+    num amount, {
+    String symbol = '\u20B9',
+    bool compact = true,
+  }) {
+    if (compact) {
+      if (amount >= 10000000) {
+        return '$symbol ${(amount / 10000000).toStringAsFixed(2)} Cr';
+      } else if (amount >= 100000) {
+        return '$symbol ${(amount / 100000).toStringAsFixed(2)} L';
+      }
+    }
+    final isNegative = amount < 0;
+    final formatted = format(amount.abs());
+    return '${isNegative ? "- " : ""}$symbol $formatted';
+  }
+
+  /// Formats currency with symbol e.g. "₹ 50,000" or "- ₹ 5,000"
+  static String formatRupees(num amount, {String symbol = '\u20B9'}) {
+    final isNegative = amount < 0;
+    final formatted = format(amount.abs());
+    return '${isNegative ? "- " : ""}$symbol $formatted';
+  }
 }
+
+/// Top-level helper to format currency with symbol and optional compact notation
+String formatCurrency(
+  num amount, {
+  String symbol = '\u20B9',
+  bool compact = true,
+}) =>
+    CurrencyInputFormatter.formatCurrency(
+      amount,
+      symbol: symbol,
+      compact: compact,
+    );
+
+/// Top-level helper to format amount as rupee string with symbol e.g. "₹ 50,000"
+String formatRupees(num amount, {String symbol = '\u20B9'}) =>
+    CurrencyInputFormatter.formatRupees(amount, symbol: symbol);
+
+/// Extension on [num] to format currency values cleanly
+extension CurrencyFormatterNumExtension on num {
+  /// Format as Indian rupee currency string with symbol e.g. "₹ 1,50,000"
+  String toRupees({String symbol = '\u20B9'}) =>
+      CurrencyInputFormatter.formatRupees(this, symbol: symbol);
+
+  /// Format currency with optional compact Cr / L suffix e.g. "₹ 1.50 L"
+  String toCurrency({String symbol = '\u20B9', bool compact = true}) =>
+      CurrencyInputFormatter.formatCurrency(
+        this,
+        symbol: symbol,
+        compact: compact,
+      );
+
+  /// Format as Indian number format without symbol e.g. "1,50,000"
+  String toIndianCurrency() => CurrencyInputFormatter.format(this);
+
+  /// Convert to Indian English words e.g. "One Lakh Fifty Thousand Rupees"
+  String toRupeesInWords() => CurrencyInputFormatter.toWords(this);
+}
+

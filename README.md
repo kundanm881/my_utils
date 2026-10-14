@@ -41,6 +41,66 @@ print(CurrencyInputFormatter.parse("₹ 1,50,000")); // 150000.0
 
 // Convert amount to words
 print(CurrencyInputFormatter.toWords(150000)); // One Lakh Fifty Thousand Rupees
+
+// Format currency with symbol & compact notation
+print(formatCurrency(50000));  // ₹ 50,000
+print(formatCurrency(150000)); // ₹ 1.50 L
+print(formatCurrency(10000000)); // ₹ 1.00 Cr
+print(formatRupees(50000));    // ₹ 50,000
+
+// Using num extension
+print(150000.toRupees());      // ₹ 1,50,000
+print(150000.toCurrency());    // ₹ 1.50 L
+```
+
+<h1>Date & Month Formatters</h1>
+
+### Usage.
+
+```dart
+// Month name
+print(getCurrentMonthName()); // 'October'
+print(getMonthName(1));       // 'January'
+
+// Date formatting
+final now = DateTime.now();
+print(formatDate(now));        // '15 Oct 2026'
+print(formatDateShort(now));   // '15/10/2026'
+print(formatDateVerbose(now)); // 'Thursday, 15 Oct 2026'
+print(formatTime(now));        // '01:05 AM'
+
+// Using DateTime extension
+print(now.toFormattedDate());        // '15 Oct 2026'
+print(now.toFormattedDateShort());   // '15/10/2026'
+print(now.toFormattedDateVerbose()); // 'Thursday, 15 Oct 2026'
+```
+
+<h1>Platform Helper (AppPlatform)</h1>
+
+### Usage.
+
+```dart
+// Check platform type
+if (AppPlatform.isDesktop) {
+  // Windows, macOS, Linux
+}
+
+if (AppPlatform.isMobile) {
+  // Android, iOS
+}
+
+// Individual platforms
+print(AppPlatform.isWindows); // true / false
+print(AppPlatform.isAndroid); // true / false
+print(AppPlatform.isWeb);     // true / false
+
+// Display names and icons
+print(AppPlatform.operatingSystemName); // 'Windows', 'Android', 'iOS', etc.
+Icon(AppPlatform.platformIcon);        // Platform-specific icon
+
+// Feature availability
+if (AppPlatform.isGoogleSignInSupported) { ... }
+if (AppPlatform.isFcmSupported) { ... }
 ```
 
 <h1>Date Picker </h1>
