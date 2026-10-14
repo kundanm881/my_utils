@@ -24,10 +24,10 @@ class DotLinePainter extends CustomPainter {
       ..strokeWidth = strokeWidth
       ..strokeCap = strokeCap;
 
-    _dowDotLine(axis: axis, canvas: canvas, paint: paint, size: size);
+    _drawDotLine(axis: axis, canvas: canvas, paint: paint, size: size);
   }
 
-  _dowDotLine({
+  void _drawDotLine({
     required Axis axis,
     required Canvas canvas,
     required Paint paint,
@@ -35,24 +35,24 @@ class DotLinePainter extends CustomPainter {
   }) {
     final double boxHeight = size.height;
     final double boxWidth = size.width;
+    final step = dotHeight + space;
+    if (step <= 0) return;
 
     if (axis == Axis.horizontal) {
-      for (int startPoint = 0; startPoint <= boxWidth; startPoint += space) {
-        double sp = startPoint.toDouble();
-        double enp = (startPoint += dotHeight).toDouble();
+      for (double startPoint = 0; startPoint <= boxWidth; startPoint += step) {
+        final double endPoint = (startPoint + dotHeight).clamp(0.0, boxWidth);
         canvas.drawLine(
-          Offset(sp, 0),
-          Offset(enp, 0),
+          Offset(startPoint, 0),
+          Offset(endPoint, 0),
           paint,
         );
       }
     } else {
-      for (int startPoint = 0; startPoint <= boxHeight; startPoint += space) {
-        double sp = startPoint.toDouble();
-        double enp = (startPoint += dotHeight).toDouble();
+      for (double startPoint = 0; startPoint <= boxHeight; startPoint += step) {
+        final double endPoint = (startPoint + dotHeight).clamp(0.0, boxHeight);
         canvas.drawLine(
-          Offset(0, sp),
-          Offset(0, enp),
+          Offset(0, startPoint),
+          Offset(0, endPoint),
           paint,
         );
       }
@@ -60,7 +60,12 @@ class DotLinePainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return false;
+  bool shouldRepaint(covariant DotLinePainter oldDelegate) {
+    return oldDelegate.paintColor != paintColor ||
+        oldDelegate.strokeWidth != strokeWidth ||
+        oldDelegate.space != space ||
+        oldDelegate.dotHeight != dotHeight ||
+        oldDelegate.strokeCap != strokeCap ||
+        oldDelegate.axis != axis;
   }
 }

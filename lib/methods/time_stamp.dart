@@ -3,9 +3,9 @@ DateTime timeStampToDateTime(dynamic timeStamp) {
   final String stringTime = timeStamp.toString();
 
   // convert to int Time
-  final int intTime = int.parse(stringTime);
+  final int intTime = int.tryParse(stringTime) ?? 0;
 
-  late int tempEpoch = 0;
+  int tempEpoch = 0;
 
   switch (stringTime.length) {
     case 10:

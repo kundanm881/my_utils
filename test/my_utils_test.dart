@@ -1,27 +1,35 @@
-import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:kd_utils/methods/get_week_day.dart';
+import 'package:kd_utils/methods/time_stamp.dart';
 
 void main() {
-  // timeStamp(timeStamp: "1694160861");
-  // final DateTime date = getDateTimeFromTimeStamp(timeStamp: "1694160861");
-  // print(date);
+  group('getWeekDay tests', () {
+    test('returns full weekday names correctly', () {
+      expect(getWeekDay(1), 'Monday');
+      expect(getWeekDay(7), 'Sunday');
+    });
 
-  print(getWeekDay(8, short: true));
+    test('returns short weekday names correctly', () {
+      expect(getWeekDay(1, short: true), 'Mon');
+      expect(getWeekDay(7, short: true), 'Sun');
+    });
 
-  // runApp(const MyApp());
-  // test('adds one to input values', () {
-  //   final calculator = Calculator();
-  //   expect(calculator.addOne(2), 3);
-  //   expect(calculator.addOne(-7), -6);
-  //   expect(calculator.addOne(0), 1);
-  // });
-}
+    test('handles invalid weekday values', () {
+      expect(getWeekDay(0), 'Day Not Found');
+      expect(getWeekDay(8), 'Day Not Found');
+      expect(getWeekDay(8, short: true), 'Day Not Found');
+    });
+  });
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  group('timeStampToDateTime tests', () {
+    test('converts 10-digit epoch seconds correctly', () {
+      final date = timeStampToDateTime('1694160861');
+      expect(date.millisecondsSinceEpoch, 1694160861000);
+    });
 
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp();
-  }
+    test('converts 13-digit epoch milliseconds correctly', () {
+      final date = timeStampToDateTime('1694160861000');
+      expect(date.millisecondsSinceEpoch, 1694160861000);
+    });
+  });
 }

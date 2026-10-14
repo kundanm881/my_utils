@@ -22,7 +22,7 @@ extension ContextExtension on BuildContext {
 
 extension WidgetExtension on num {
   ///  [_number] is returing [double] value.
-  double _number() => this.toDouble();
+  double _number() => toDouble();
 
   /// this is sizebox widget with height property
   Widget get height => SizedBox(height: _number());

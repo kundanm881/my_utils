@@ -30,13 +30,10 @@ String getWeekDay(int day, {bool short = false}) {
   }
 
   if (short) {
-    String st = din.substring(0, 3);
-    if (day < 0 || day > 7) {
+    if (day < 1 || day > 7) {
       return din;
-    } else {
-      return st;
     }
-  } else {
-    return din;
+    return din.substring(0, 3);
   }
+  return din;
 }

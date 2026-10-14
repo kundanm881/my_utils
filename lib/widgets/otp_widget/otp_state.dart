@@ -9,38 +9,43 @@ abstract class OTPViewState extends State<OTPView> {
 
   @override
   void initState() {
-    _genNodesAndController();
-
     super.initState();
+    _genNodesAndController();
   }
 
-  _genNodesAndController() {
-    List<FocusNode> tempNodes = [];
-    List<TextEditingController> tempController = [];
-    for (int i = 0; i < widget.otpCount; i++) {
-      tempNodes.add(FocusNode());
-      tempController.add(TextEditingController());
+  @override
+  void dispose() {
+    for (final node in focusNodes) {
+      node.dispose();
     }
-    setState(() {
-      focusNodes = tempNodes;
-      otpFieldControllers = tempController;
-    });
+    for (final c in otpFieldControllers) {
+      c.dispose();
+    }
+    controller.dispose();
+    super.dispose();
   }
 
-  _addText(String t) {
+  void _genNodesAndController() {
+    focusNodes = List.generate(widget.otpCount, (_) => FocusNode());
+    otpFieldControllers =
+        List.generate(widget.otpCount, (_) => TextEditingController());
+  }
+
+  void _addText(String t) {
     controller.text = controller.text + t;
   }
 
-  _removeText() {
-    int textLength = controller.text.length;
-    controller.text = controller.text.substring(0, textLength - 1);
+  void _removeText() {
+    final textLength = controller.text.length;
+    if (textLength > 0) {
+      controller.text = controller.text.substring(0, textLength - 1);
+    }
   }
 
-  onChange({
+  void onChange({
     required int currentIndex,
   }) {
     final ct = otpFieldControllers[currentIndex];
-    // if (currentIndex > 0) {}
     if (ct.text.isEmpty) {
       _removeText();
       if (currentIndex > 0) {
@@ -52,7 +57,7 @@ abstract class OTPViewState extends State<OTPView> {
         focusNodes[currentIndex + 1].requestFocus();
       } else {
         focusNodes[currentIndex].unfocus();
-        widget.onSubmit!(controller.text);
+        widget.onSubmit?.call(controller.text);
       }
     }
   }

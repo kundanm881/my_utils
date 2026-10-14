@@ -54,7 +54,7 @@ abstract class DatePickerState extends State<DatePickerView> {
       dateScrollController.animateTo(
           (dates.indexOf(currentDate) * (widget.dateSpacing + boxSize) -
               startScreen),
-          duration: Duration(milliseconds: 300),
+          duration: const Duration(milliseconds: 300),
           curve: Curves.easeIn);
     });
 
@@ -69,7 +69,7 @@ abstract class DatePickerState extends State<DatePickerView> {
 
   // style
   TextStyle get monthTextStyle =>
-      TextStyle(fontSize: 20, fontWeight: FontWeight.w600);
+      const TextStyle(fontSize: 20, fontWeight: FontWeight.w600);
 
   String getWeekDay(DateTime dateTime) {
     int weekday = dateTime.weekday;

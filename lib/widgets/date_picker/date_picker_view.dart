@@ -81,12 +81,12 @@ class _DatePickerViewState extends DatePickerState {
                           .round()
                       : 0),
             );
-            return Text("${DateFormat("yyy - MMM").format(scrollerDate)}",
+            return Text(DateFormat("yyy - MMM").format(scrollerDate),
                 style: widget.yearMonth ?? monthTextStyle);
           },
         ),
         8.height,
-        Container(
+        SizedBox(
           height: boxSize,
           child: ListView.separated(
             controller: dateScrollController,
@@ -114,14 +114,14 @@ class _DatePickerViewState extends DatePickerState {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text("${getWeekDay(dates[index])}",
+                      Text(getWeekDay(dates[index]),
                           style: widget.weekday!.copyWith(
                               color: (dates[index] == currentDate)
                                   ? widget.activeWeekday ?? Colors.white
                                   : widget.weekdayColor ?? Colors.black)),
                       widget.dayWeekHeight.height,
                       Text(
-                        "${DateFormat("dd").format(dates[index])}",
+                        DateFormat("dd").format(dates[index]),
                         style: widget.day!.copyWith(
                             color: (dates[index] == currentDate)
                                 ? widget.activeWeekday ?? Colors.white
