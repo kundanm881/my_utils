@@ -16,3 +16,6 @@ export 'api_service/api_service_lib.dart';
 
 // * Custom painter
 export 'custom_painters/dot_line_painter.dart';
+
+// * formatters
+export 'formatters/currency_input_formatter.dart';

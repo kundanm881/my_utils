@@ -20,6 +20,29 @@ import 'package:kd_utils/kd_utils.dart';
   print(weekDay); // Mon
 ```
 
+<h1>Currency Input Formatter</h1>
+
+### Usage.
+
+```dart
+// Real-time TextField formatting
+TextField(
+  keyboardType: TextInputType.number,
+  inputFormatters: const [
+    CurrencyInputFormatter(allowDecimal: true),
+  ],
+);
+
+// Formatting numbers
+print(CurrencyInputFormatter.format(150000)); // 1,50,000
+
+// Parsing formatted strings
+print(CurrencyInputFormatter.parse("₹ 1,50,000")); // 150000.0
+
+// Convert amount to words
+print(CurrencyInputFormatter.toWords(150000)); // One Lakh Fifty Thousand Rupees
+```
+
 <h1>Date Picker </h1>
 
 <img src="https://github.com/kundanm881/my_utils/blob/master/assets/datePikerDemo.png?raw=true" width=300/>
