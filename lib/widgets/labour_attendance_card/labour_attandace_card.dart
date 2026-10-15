@@ -201,7 +201,7 @@ class _LabourAttendanceCardState extends State<LabourAttendanceCard> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           // Card Header: Title & Worker Metadata Table
-                          _buildCardHeader(isDark, cardWidth, effectiveAdvance),
+                          _buildCardHeader(isDark, cardWidth),
                           const SizedBox(height: 12),
 
                           // Bi-Column Punch Table (1–15 & 16–31)
@@ -336,9 +336,14 @@ class _LabourAttendanceCardState extends State<LabourAttendanceCard> {
   }
 
   // --- Card Header ---
-  Widget _buildCardHeader(bool isDark, double cardWidth, double totalAdvancePaid) {
+  Widget _buildCardHeader(bool isDark, double cardWidth) {
     final borderColor = isDark ? const Color(0xFF475569) : const Color(0xFF1E293B);
     final monthStr = DateFormat('MMMM yyyy').format(widget.month).toUpperCase();
+    final isCompact = cardWidth < 520;
+
+    final wageText = widget.dailyWage > 0
+        ? '${widget.currencySymbol}${widget.dailyWage.toInt()} / DAY'
+        : 'NOT SET';
 
     return Column(
       children: [
@@ -358,82 +363,97 @@ class _LabourAttendanceCardState extends State<LabourAttendanceCard> {
           decoration: BoxDecoration(
             border: Border.all(color: borderColor, width: 1.2),
           ),
-          child: Column(
-            children: [
-              // Row 1: Name, Role, Month
-              Row(
-                children: [
-                  Expanded(
-                    flex: 4,
-                    child: _metaCell(
-                      'EMPLOYEE NAME',
-                      widget.workerName.toUpperCase(),
-                      isDark: isDark,
-                      borderColor: borderColor,
+          child: isCompact
+              ? Column(
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _metaCell(
+                            'EMPLOYEE NAME',
+                            widget.workerName.toUpperCase(),
+                            isDark: isDark,
+                            borderColor: borderColor,
+                          ),
+                        ),
+                        Expanded(
+                          child: _metaCell(
+                            'ROLE',
+                            widget.workerRole.toUpperCase(),
+                            isDark: isDark,
+                            borderColor: borderColor,
+                            isLast: true,
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                  Expanded(
-                    flex: 3,
-                    child: _metaCell(
-                      'DESIGNATION / ROLE',
-                      widget.workerRole.toUpperCase(),
-                      isDark: isDark,
-                      borderColor: borderColor,
+                    Container(height: 1, color: borderColor),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _metaCell(
+                            'MONTH / YEAR',
+                            monthStr,
+                            isDark: isDark,
+                            borderColor: borderColor,
+                          ),
+                        ),
+                        Expanded(
+                          child: _metaCell(
+                            'WAGE',
+                            wageText,
+                            isDark: isDark,
+                            borderColor: borderColor,
+                            isLast: true,
+                            highlightColor: widget.dailyWage > 0 ? const Color(0xFF0284C7) : null,
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                  Expanded(
-                    flex: 3,
-                    child: _metaCell(
-                      'MONTH / YEAR',
-                      monthStr,
-                      isDark: isDark,
-                      borderColor: borderColor,
-                      isLast: true,
+                  ],
+                )
+              : Row(
+                  children: [
+                    Expanded(
+                      flex: 4,
+                      child: _metaCell(
+                        'EMPLOYEE NAME',
+                        widget.workerName.toUpperCase(),
+                        isDark: isDark,
+                        borderColor: borderColor,
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              Container(height: 1, color: borderColor),
-              // Row 2: Wage, Site, Advances
-              Row(
-                children: [
-                  Expanded(
-                    flex: 4,
-                    child: _metaCell(
-                      'DAILY RATE (WAGE)',
-                      widget.dailyWage > 0
-                          ? '${widget.currencySymbol}${widget.dailyWage.toInt()} / DAY'
-                          : 'NOT SET',
-                      isDark: isDark,
-                      borderColor: borderColor,
+                    Expanded(
+                      flex: 3,
+                      child: _metaCell(
+                        'ROLE',
+                        widget.workerRole.toUpperCase(),
+                        isDark: isDark,
+                        borderColor: borderColor,
+                      ),
                     ),
-                  ),
-                  Expanded(
-                    flex: 3,
-                    child: _metaCell(
-                      'ASSIGNED SITE',
-                      widget.siteName?.toUpperCase() ?? 'GENERAL',
-                      isDark: isDark,
-                      borderColor: borderColor,
+                    Expanded(
+                      flex: 3,
+                      child: _metaCell(
+                        'MONTH / YEAR',
+                        monthStr,
+                        isDark: isDark,
+                        borderColor: borderColor,
+                      ),
                     ),
-                  ),
-                  Expanded(
-                    flex: 3,
-                    child: _metaCell(
-                      'ADVANCE PAID',
-                      totalAdvancePaid > 0
-                          ? '${widget.currencySymbol}${totalAdvancePaid.toInt()}'
-                          : '-',
-                      isDark: isDark,
-                      borderColor: borderColor,
-                      isLast: true,
-                      highlightColor: totalAdvancePaid > 0 ? const Color(0xFFD97706) : null,
+                    Expanded(
+                      flex: 3,
+                      child: _metaCell(
+                        'WAGE',
+                        wageText,
+                        isDark: isDark,
+                        borderColor: borderColor,
+                        isLast: true,
+                        highlightColor: widget.dailyWage > 0 ? const Color(0xFF0284C7) : null,
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ],
-          ),
+                  ],
+                ),
         ),
       ],
     );
