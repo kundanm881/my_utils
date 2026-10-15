@@ -12,6 +12,7 @@ export 'methods/date_formatter.dart';
 // * widgets
 export 'widgets/date_picker/date_picker_view.dart';
 export 'widgets/otp_widget/otp_view.dart';
+export 'widgets/signature_pad/signature_pad.dart';
 
 //* api services
 export 'api_service/api_service_lib.dart';
