@@ -1,6 +1,7 @@
 library kd_utils;
 
 export 'extensions/extensions.dart';
+export 'strings/strings.dart';
 
 // * functions
 export 'methods/time_stamp.dart';

@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
+import '../strings/strings.dart';
 
 /// Get full name of the current month or for a given [date]
 String getCurrentMonthName([DateTime? date]) {
   final target = date ?? DateTime.now();
-  return _months[target.month - 1];
+  return fullMonths[target.month - 1];
 }
 
 /// Get month full name given 1-12
 String getMonthName(int month) {
-  if (month >= 1 && month <= 12) return _months[month - 1];
+  if (month >= 1 && month <= 12) return fullMonths[month - 1];
   return '';
 }
 
 /// Format Date into readable string: e.g. "26 Sep 2026"
 String formatDate(DateTime? date, {String fallback = 'N/A'}) {
   if (date == null) return fallback;
-  return '${date.day} ${_shortMonths[date.month - 1]} ${date.year}';
+  return '${date.day} ${shortMonths[date.month - 1]} ${date.year}';
 }
 
 /// Format Date into short slash format: e.g. "26/09/2026"
@@ -27,8 +28,8 @@ String formatDateShort(DateTime? date, {String fallback = 'N/A'}) {
 /// Format Date into verbose readable string e.g. "Wednesday, 14 Oct 2026"
 String formatDateVerbose(DateTime? date, {String fallback = 'N/A'}) {
   if (date == null) return fallback;
-  final weekday = _weekdays[date.weekday - 1];
-  final month = _shortMonths[date.month - 1];
+  final weekday = weekdays[date.weekday - 1];
+  final month = shortMonths[date.month - 1];
   return '$weekday, ${date.day} $month ${date.year}';
 }
 
@@ -71,53 +72,3 @@ extension DateFormattingExtension on DateTime {
   /// Get month name
   String get monthFullName => getCurrentMonthName(this);
 }
-
-const List<String> _months = [
-  'January',
-  'February',
-  'March',
-  'April',
-  'May',
-  'June',
-  'July',
-  'August',
-  'September',
-  'October',
-  'November',
-  'December',
-];
-
-const List<String> _shortMonths = [
-  'Jan',
-  'Feb',
-  'Mar',
-  'Apr',
-  'May',
-  'Jun',
-  'Jul',
-  'Aug',
-  'Sep',
-  'Oct',
-  'Nov',
-  'Dec',
-];
-
-const List<String> _weekdays = [
-  'Mon',
-  'Tue',
-  'Wed',
-  'Thu',
-  'Fri',
-  'Sat',
-  'Sun'
-];
-
-// const List<String> _fullWeekdays = [
-//   'Monday',
-//   'Tuesday',
-//   'Wednesday',
-//   'Thursday',
-//   'Friday',
-//   'Saturday',
-//   'Sunday',
-// ];
