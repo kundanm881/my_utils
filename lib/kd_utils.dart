@@ -13,6 +13,7 @@ export 'methods/date_formatter.dart';
 export 'widgets/date_picker/date_picker_view.dart';
 export 'widgets/otp_widget/otp_view.dart';
 export 'widgets/signature_pad/signature_pad.dart';
+export 'widgets/labour_attendance_card/labour_attandace_card.dart';
 
 //* api services
 export 'api_service/api_service_lib.dart';
