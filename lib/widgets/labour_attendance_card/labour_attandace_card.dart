@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:kd_utils/widgets/signature_pad/signature_pad_dialog.dart';
@@ -83,8 +84,9 @@ class LabourAttendanceCard extends StatefulWidget {
   /// Whether the card allows direct inline editing by administrators / users
   final bool isEditable;
 
-  /// Callback fired when an admin updates a day's attendance record directly from the card
-  final void Function(int day, LabourDayAttendance attendance)? onDayUpdate;
+  /// Callback fired when an admin updates a day's attendance record directly from the card.
+  /// Can return a Future to allow asynchronous remote updates (e.g. Firebase) with loading spinner.
+  final FutureOr<bool?> Function(int day, LabourDayAttendance attendance)? onDayUpdate;
 
   const LabourAttendanceCard({
     super.key,
@@ -137,10 +139,9 @@ class _LabourAttendanceCardState extends State<LabourAttendanceCard> {
   @override
   void didUpdateWidget(covariant LabourAttendanceCard oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.month != widget.month) {
+    if (oldWidget.month != widget.month ||
+        oldWidget.dayAttendance != widget.dayAttendance) {
       _hasLocalEdits = false;
-      _localDayAttendance = Map<int, LabourDayAttendance>.from(widget.dayAttendance);
-    } else if (oldWidget.dayAttendance != widget.dayAttendance && !_hasLocalEdits) {
       _localDayAttendance = Map<int, LabourDayAttendance>.from(widget.dayAttendance);
     }
   }
@@ -914,9 +915,12 @@ class _LabourAttendanceCardState extends State<LabourAttendanceCard> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final monthName = DateFormat('MMMM yyyy').format(widget.month);
 
-    final updated = await showDialog<LabourDayAttendance>(
+    await showDialog<void>(
       context: context,
+      barrierDismissible: false,
       builder: (ctx) {
+        bool isSaving = false;
+        String? errorMessage;
         return StatefulBuilder(
           builder: (ctx, setDialogState) {
             return AlertDialog(
@@ -966,6 +970,29 @@ class _LabourAttendanceCardState extends State<LabourAttendanceCard> {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
+                    if (errorMessage != null) ...[
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        margin: const EdgeInsets.only(bottom: 12),
+                        decoration: BoxDecoration(
+                          color: Colors.red.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(color: Colors.red.shade300),
+                        ),
+                        child: Row(
+                          children: [
+                            const Icon(Icons.error_outline, color: Colors.red, size: 16),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                errorMessage!,
+                                style: const TextStyle(color: Colors.red, fontSize: 12),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                     Text(
                       'ATTENDANCE STATUS',
                       style: TextStyle(
@@ -1073,7 +1100,7 @@ class _LabourAttendanceCardState extends State<LabourAttendanceCard> {
               ),
               actions: [
                 TextButton(
-                  onPressed: () => Navigator.of(ctx).pop(),
+                  onPressed: isSaving ? null : () => Navigator.of(ctx).pop(),
                   child: const Text('Cancel'),
                 ),
                 ElevatedButton(
@@ -1082,20 +1109,71 @@ class _LabourAttendanceCardState extends State<LabourAttendanceCard> {
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                   ),
-                  onPressed: () {
-                    final parsedOt = double.tryParse(otController.text.trim()) ?? 0.0;
-                    final parsedAdvance = double.tryParse(advanceController.text.trim()) ?? 0.0;
+                  onPressed: isSaving
+                      ? null
+                      : () async {
+                          final parsedOt = double.tryParse(otController.text.trim()) ?? 0.0;
+                          final parsedAdvance = double.tryParse(advanceController.text.trim()) ?? 0.0;
 
-                    final updatedRecord = current.copyWith(
-                      present: selectedStatus == 'P',
-                      halfDay: selectedStatus == 'HD',
-                      absent: selectedStatus == 'A',
-                      overtime: parsedOt,
-                      advance: parsedAdvance,
-                    );
-                    Navigator.of(ctx).pop(updatedRecord);
-                  },
-                  child: const Text('Save & Update'),
+                          final updatedRecord = current.copyWith(
+                            present: selectedStatus == 'P',
+                            halfDay: selectedStatus == 'HD',
+                            absent: selectedStatus == 'A',
+                            overtime: parsedOt,
+                            advance: parsedAdvance,
+                          );
+
+                          if (widget.onDayUpdate != null) {
+                            setDialogState(() {
+                              isSaving = true;
+                              errorMessage = null;
+                            });
+
+                            try {
+                              final result = await widget.onDayUpdate!(day, updatedRecord);
+                              if (result != false) {
+                                if (ctx.mounted) {
+                                  Navigator.of(ctx).pop();
+                                }
+                                return;
+                              } else {
+                                if (ctx.mounted) {
+                                  setDialogState(() {
+                                    isSaving = false;
+                                    errorMessage = 'Failed to update on server. Please try again.';
+                                  });
+                                }
+                                return;
+                              }
+                            } catch (e) {
+                              if (ctx.mounted) {
+                                setDialogState(() {
+                                  isSaving = false;
+                                  errorMessage = 'Error saving: $e';
+                                });
+                              }
+                              return;
+                            }
+                          }
+
+                          // Fallback if no callback provided
+                          setState(() {
+                            _localDayAttendance[day] = updatedRecord;
+                          });
+                          if (ctx.mounted) {
+                            Navigator.of(ctx).pop();
+                          }
+                        },
+                  child: isSaving
+                      ? const SizedBox(
+                          height: 18,
+                          width: 18,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                          ),
+                        )
+                      : const Text('Save & Update'),
                 ),
               ],
             );
@@ -1103,14 +1181,6 @@ class _LabourAttendanceCardState extends State<LabourAttendanceCard> {
         );
       },
     );
-
-    if (updated != null) {
-      setState(() {
-        _hasLocalEdits = true;
-        _localDayAttendance[day] = updated;
-      });
-      widget.onDayUpdate?.call(day, updated);
-    }
   }
 
   Widget _statusChip({
