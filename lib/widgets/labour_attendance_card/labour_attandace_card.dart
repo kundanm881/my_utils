@@ -80,6 +80,12 @@ class LabourAttendanceCard extends StatefulWidget {
   final double? grossEarnings;
   final double? netPayable;
 
+  /// Whether the card allows direct inline editing by administrators / users
+  final bool isEditable;
+
+  /// Callback fired when an admin updates a day's attendance record directly from the card
+  final void Function(int day, LabourDayAttendance attendance)? onDayUpdate;
+
   const LabourAttendanceCard({
     super.key,
     required this.workerName,
@@ -108,6 +114,8 @@ class LabourAttendanceCard extends StatefulWidget {
     this.totalAdvance,
     this.grossEarnings,
     this.netPayable,
+    this.isEditable = true,
+    this.onDayUpdate,
   });
 
   @override
@@ -117,6 +125,25 @@ class LabourAttendanceCard extends StatefulWidget {
 class _LabourAttendanceCardState extends State<LabourAttendanceCard> {
   // 0 = Full Card, 1 = Days 1-15, 2 = Days 16-31 (Mobile bi-column switcher)
   int _viewMode = 0;
+  late Map<int, LabourDayAttendance> _localDayAttendance;
+  bool _hasLocalEdits = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _localDayAttendance = Map<int, LabourDayAttendance>.from(widget.dayAttendance);
+  }
+
+  @override
+  void didUpdateWidget(covariant LabourAttendanceCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.month != widget.month) {
+      _hasLocalEdits = false;
+      _localDayAttendance = Map<int, LabourDayAttendance>.from(widget.dayAttendance);
+    } else if (oldWidget.dayAttendance != widget.dayAttendance && !_hasLocalEdits) {
+      _localDayAttendance = Map<int, LabourDayAttendance>.from(widget.dayAttendance);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -137,24 +164,25 @@ class _LabourAttendanceCardState extends State<LabourAttendanceCard> {
     double computedAdvance = 0.0;
 
     for (int d = 1; d <= daysInMonth; d++) {
-      final rec = widget.dayAttendance[d];
+      final rec = _localDayAttendance[d];
       if (rec != null) {
         if (rec.present) computedPresent++;
         if (rec.absent) computedAbsent++;
+        if (rec.halfDay) computedPresent++;
         computedOt += rec.overtime;
         computedAdvance += rec.advance;
       }
     }
 
-    final int effectivePresent = widget.totalPresent ?? computedPresent;
-    final int effectiveAbsent = widget.totalAbsent ?? computedAbsent;
-    final double effectiveOt = widget.totalOt ?? computedOt;
-    final double effectiveAdvance = widget.totalAdvance ?? computedAdvance;
+    final int effectivePresent = (_hasLocalEdits ? null : widget.totalPresent) ?? computedPresent;
+    final int effectiveAbsent = (_hasLocalEdits ? null : widget.totalAbsent) ?? computedAbsent;
+    final double effectiveOt = (_hasLocalEdits ? null : widget.totalOt) ?? computedOt;
+    final double effectiveAdvance = (_hasLocalEdits ? null : widget.totalAdvance) ?? computedAdvance;
 
     final double hourlyRate = widget.dailyWage > 0 ? widget.dailyWage / 8.0 : 0.0;
     final double computedGross = (effectivePresent * widget.dailyWage) + (effectiveOt * hourlyRate);
-    final double effectiveGross = widget.grossEarnings ?? computedGross;
-    final double effectiveNet = widget.netPayable ?? (effectiveGross - effectiveAdvance);
+    final double effectiveGross = (_hasLocalEdits ? null : widget.grossEarnings) ?? computedGross;
+    final double effectiveNet = (_hasLocalEdits ? null : widget.netPayable) ?? (effectiveGross - effectiveAdvance);
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -656,18 +684,25 @@ class _LabourAttendanceCardState extends State<LabourAttendanceCard> {
       ];
     }
 
-    final record = widget.dayAttendance[day];
+    final VoidCallback? onCellTap = widget.isEditable
+        ? () => _showDayEditDialog(context, day, daysInMonth)
+        : null;
+    final String? cellTooltip = widget.isEditable
+        ? 'Click to edit Day $day'
+        : null;
+
+    final record = _localDayAttendance[day];
     final double advance = record?.advance ?? 0.0;
     final advanceStr = advance > 0 ? '${widget.currencySymbol}${advance.toInt()}' : '-';
     final advanceColor = advance > 0 ? const Color(0xFFD97706) : null;
 
     if (record == null) {
       return [
-        _cell('$day', isBold: true, isDark: isDark),
-        _attendanceCell(first: '-', second: '', isDark: isDark, borderColor: borderColor),
-        _cell('-', isDark: isDark),
-        _cell(advanceStr, color: advanceColor, isBold: advance > 0, isDark: isDark),
-        _cell('-', isDark: isDark),
+        _cell('$day', isBold: true, isDark: isDark, onTap: onCellTap, tooltip: cellTooltip),
+        _attendanceCell(first: '-', second: '', isDark: isDark, borderColor: borderColor, onTap: onCellTap, tooltip: cellTooltip),
+        _cell('-', isDark: isDark, onTap: onCellTap, tooltip: cellTooltip),
+        _cell(advanceStr, color: advanceColor, isBold: advance > 0, isDark: isDark, onTap: onCellTap, tooltip: cellTooltip),
+        _cell('-', isDark: isDark, onTap: onCellTap, tooltip: cellTooltip),
       ];
     }
 
@@ -709,11 +744,21 @@ class _LabourAttendanceCardState extends State<LabourAttendanceCard> {
             : (record.absent ? const Color(0xFFEF4444) : null),
         isBold: record.present,
         isDark: isDark,
+        onTap: onCellTap,
+        tooltip: cellTooltip,
+      );
+    }
+
+    if (onCellTap != null && record.signature != null && record.signature!.trim().isNotEmpty) {
+      signatureWidget = InkWell(
+        onTap: onCellTap,
+        hoverColor: isDark ? const Color(0xFF38BDF8).withValues(alpha: 0.12) : const Color(0xFF0284C7).withValues(alpha: 0.08),
+        child: Tooltip(message: cellTooltip ?? '', child: signatureWidget),
       );
     }
 
     return [
-      _cell('$day', isBold: true, isDark: isDark),
+      _cell('$day', isBold: true, isDark: isDark, onTap: onCellTap, tooltip: cellTooltip),
       _attendanceCell(
         first: firstStatus,
         second: '',
@@ -721,18 +766,24 @@ class _LabourAttendanceCardState extends State<LabourAttendanceCard> {
         isBold: true,
         isDark: isDark,
         borderColor: borderColor,
+        onTap: onCellTap,
+        tooltip: cellTooltip,
       ),
       _cell(
         otStr,
         color: record.overtime > 0 ? const Color(0xFFD97706) : null,
         isBold: record.overtime > 0,
         isDark: isDark,
+        onTap: onCellTap,
+        tooltip: cellTooltip,
       ),
       _cell(
         advanceStr,
         color: advanceColor,
         isBold: advance > 0,
         isDark: isDark,
+        onTap: onCellTap,
+        tooltip: cellTooltip,
       ),
       signatureWidget,
     ];
@@ -744,11 +795,13 @@ class _LabourAttendanceCardState extends State<LabourAttendanceCard> {
     bool isDark = false,
     bool isDimmed = false,
     Color? color,
+    VoidCallback? onTap,
+    String? tooltip,
   }) {
     Color effectiveColor = color ?? (isDark ? Colors.white : const Color(0xFF0F172A));
     if (isDimmed) effectiveColor = effectiveColor.withValues(alpha: 0.28);
 
-    return SizedBox(
+    Widget content = SizedBox(
       height: 24,
       child: Center(
         child: Text(
@@ -762,6 +815,20 @@ class _LabourAttendanceCardState extends State<LabourAttendanceCard> {
         ),
       ),
     );
+
+    if (onTap != null) {
+      content = InkWell(
+        onTap: onTap,
+        hoverColor: isDark ? const Color(0xFF38BDF8).withValues(alpha: 0.12) : const Color(0xFF0284C7).withValues(alpha: 0.08),
+        child: content,
+      );
+    }
+
+    if (tooltip != null && tooltip.isNotEmpty) {
+      content = Tooltip(message: tooltip, child: content);
+    }
+
+    return content;
   }
 
   Widget _attendanceCell({
@@ -772,11 +839,13 @@ class _LabourAttendanceCardState extends State<LabourAttendanceCard> {
     Color? color,
     bool isBold = false,
     bool isDimmed = false,
+    VoidCallback? onTap,
+    String? tooltip,
   }) {
     Color effectiveColor = color ?? (isDark ? Colors.white : const Color(0xFF0F172A));
     if (isDimmed) effectiveColor = effectiveColor.withValues(alpha: 0.28);
 
-    return SizedBox(
+    Widget content = SizedBox(
       height: 24,
       child: Row(
         children: [
@@ -806,6 +875,270 @@ class _LabourAttendanceCardState extends State<LabourAttendanceCard> {
             ),
           ),
         ],
+      ),
+    );
+
+    if (onTap != null) {
+      content = InkWell(
+        onTap: onTap,
+        hoverColor: isDark ? const Color(0xFF38BDF8).withValues(alpha: 0.12) : const Color(0xFF0284C7).withValues(alpha: 0.08),
+        child: content,
+      );
+    }
+
+    if (tooltip != null && tooltip.isNotEmpty) {
+      content = Tooltip(message: tooltip, child: content);
+    }
+
+    return content;
+  }
+
+  Future<void> _showDayEditDialog(BuildContext context, int day, int daysInMonth) async {
+    if (day > daysInMonth) return;
+    final current = _localDayAttendance[day] ?? LabourDayAttendance(day: day);
+
+    String selectedStatus = current.present
+        ? 'P'
+        : (current.absent
+            ? 'A'
+            : (current.halfDay ? 'HD' : '-'));
+    final otController = TextEditingController(
+      text: current.overtime > 0
+          ? (current.overtime % 1 == 0 ? current.overtime.toInt().toString() : current.overtime.toString())
+          : '',
+    );
+    final advanceController = TextEditingController(
+      text: current.advance > 0 ? current.advance.toInt().toString() : '',
+    );
+
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final monthName = DateFormat('MMMM yyyy').format(widget.month);
+
+    final updated = await showDialog<LabourDayAttendance>(
+      context: context,
+      builder: (ctx) {
+        return StatefulBuilder(
+          builder: (ctx, setDialogState) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              backgroundColor: isDark ? const Color(0xFF1E293B) : Colors.white,
+              titlePadding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              actionsPadding: const EdgeInsets.fromLTRB(16, 10, 16, 16),
+              title: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF0284C7).withValues(alpha: 0.12),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(Icons.edit_calendar_rounded, color: Color(0xFF0284C7), size: 20),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Update Day $day Attendance',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: isDark ? Colors.white : const Color(0xFF0F172A),
+                          ),
+                        ),
+                        Text(
+                          '$monthName • ${widget.workerName}',
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: isDark ? Colors.white60 : Colors.black54,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              content: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Text(
+                      'ATTENDANCE STATUS',
+                      style: TextStyle(
+                        fontSize: 10.5,
+                        fontWeight: FontWeight.w700,
+                        color: isDark ? Colors.white70 : Colors.black54,
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: [
+                        _statusChip(
+                          label: 'Present (P)',
+                          code: 'P',
+                          selected: selectedStatus == 'P',
+                          color: const Color(0xFF10B981),
+                          onTap: () => setDialogState(() => selectedStatus = 'P'),
+                        ),
+                        _statusChip(
+                          label: 'Half Day (HD)',
+                          code: 'HD',
+                          selected: selectedStatus == 'HD',
+                          color: const Color(0xFFF59E0B),
+                          onTap: () => setDialogState(() => selectedStatus = 'HD'),
+                        ),
+                        _statusChip(
+                          label: 'Absent (A)',
+                          code: 'A',
+                          selected: selectedStatus == 'A',
+                          color: const Color(0xFFEF4444),
+                          onTap: () => setDialogState(() => selectedStatus = 'A'),
+                        ),
+                        _statusChip(
+                          label: 'Unmarked (-)',
+                          code: '-',
+                          selected: selectedStatus == '-',
+                          color: Colors.grey,
+                          onTap: () => setDialogState(() => selectedStatus = '-'),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 18),
+                    Text(
+                      'OVERTIME (HOURS)',
+                      style: TextStyle(
+                        fontSize: 10.5,
+                        fontWeight: FontWeight.w700,
+                        color: isDark ? Colors.white70 : Colors.black54,
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Wrap(
+                      spacing: 6,
+                      children: [0.0, 1.0, 1.5, 2.0, 3.0, 4.0].map((h) {
+                        final isHSelected = (double.tryParse(otController.text) ?? 0.0) == h;
+                        return ChoiceChip(
+                          label: Text('${h % 1 == 0 ? h.toInt() : h}h', style: const TextStyle(fontSize: 11)),
+                          selected: isHSelected,
+                          onSelected: (_) {
+                            setDialogState(() {
+                              otController.text = h > 0 ? (h % 1 == 0 ? h.toInt().toString() : h.toString()) : '';
+                            });
+                          },
+                        );
+                      }).toList(),
+                    ),
+                    const SizedBox(height: 8),
+                    TextField(
+                      controller: otController,
+                      keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                      decoration: InputDecoration(
+                        isDense: true,
+                        hintText: 'Custom OT hours (e.g. 2.5)',
+                        prefixIcon: const Icon(Icons.timer_outlined, size: 18),
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                      ),
+                    ),
+                    const SizedBox(height: 18),
+                    Text(
+                      'DAILY ADVANCE PAID',
+                      style: TextStyle(
+                        fontSize: 10.5,
+                        fontWeight: FontWeight.w700,
+                        color: isDark ? Colors.white70 : Colors.black54,
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    TextField(
+                      controller: advanceController,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        isDense: true,
+                        prefixText: '${widget.currencySymbol} ',
+                        hintText: 'Advance amount (e.g. 500)',
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(ctx).pop(),
+                  child: const Text('Cancel'),
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF0284C7),
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                  ),
+                  onPressed: () {
+                    final parsedOt = double.tryParse(otController.text.trim()) ?? 0.0;
+                    final parsedAdvance = double.tryParse(advanceController.text.trim()) ?? 0.0;
+
+                    final updatedRecord = current.copyWith(
+                      present: selectedStatus == 'P',
+                      halfDay: selectedStatus == 'HD',
+                      absent: selectedStatus == 'A',
+                      overtime: parsedOt,
+                      advance: parsedAdvance,
+                    );
+                    Navigator.of(ctx).pop(updatedRecord);
+                  },
+                  child: const Text('Save & Update'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+
+    if (updated != null) {
+      setState(() {
+        _hasLocalEdits = true;
+        _localDayAttendance[day] = updated;
+      });
+      widget.onDayUpdate?.call(day, updated);
+    }
+  }
+
+  Widget _statusChip({
+    required String label,
+    required String code,
+    required bool selected,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(8),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 150),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+        decoration: BoxDecoration(
+          color: selected ? color : color.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: color, width: selected ? 1.5 : 1),
+        ),
+        child: Text(
+          label,
+          style: TextStyle(
+            fontSize: 11,
+            fontWeight: FontWeight.bold,
+            color: selected ? Colors.white : color,
+          ),
+        ),
       ),
     );
   }
